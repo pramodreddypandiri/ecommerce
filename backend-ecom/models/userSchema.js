@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre('save', async function(next){
     //set encrypted pw with bcrypt
     // if pwd already existed
-    if(!this.modified("password")) {
+    if(!this.isModified("password")) {
         return next()
     } 
     // when giving pwd for first time
@@ -66,6 +66,17 @@ userSchema.methods = {
                 expiresIn: config.JWT_EXPIRY
             }
         )
+    },
+    generateForgtPasswordToken: function () {
+        this.forgotToken = crypto.randomBytes(20).toString('hex')
+
+        //step 1 = encrypt and store forgotToken to DB
+        this.forgotPasswordTokens = crypto.createHash('sha256').update(forgotToken).digest("hex")
+        // set time limit for setting password again
+         this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000 
+
+        // step  = 2 send to user
+         return forgotToken
     }
 }
 

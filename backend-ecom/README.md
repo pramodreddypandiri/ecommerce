@@ -10,4 +10,6 @@
  `Mongoose hooks`
 
  
+`crypto.createHash().update().digest()`
+
 
