@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
         enum: Object.values(AuthRoles),
         default: AuthRoles.USER
     },
-    forgotPasswordTokens: String,
+    forgotPasswordToken: String,
     forgotPasswordExpiry: Date,
 
 },
@@ -50,10 +50,13 @@ userSchema.pre('save', async function(next){
 })
 // add functions/methods or features to mongoose schema
 userSchema.methods = {
+    
     //compare password
     comparePassword: async function(enteredPassword){
         return await bcrypt.compare(enteredPassword, this.password)
     },
+
+
     //generate JWT TOKEN
     getJwtToken: function(){
         return JWT.sign(
@@ -67,17 +70,24 @@ userSchema.methods = {
             }
         )
     },
-    generateForgtPasswordToken: function () {
-        this.forgotToken = crypto.randomBytes(20).toString('hex')
 
-        //step 1 = encrypt and store forgotToken to DB
-        this.forgotPasswordTokens = crypto.createHash('sha256').update(forgotToken).digest("hex")
-        // set time limit for setting password again
-         this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000 
+    // generate token for forgot password
+    generateForgotPasswordToken: function(){
+        const forgotToken = crypto.randomBytes(20).toString('hex');
 
-        // step  = 2 send to user
-         return forgotToken
+        //step 1 - save to DB
+        this.forgotPasswordToken = crypto
+        .createHash("sha256")
+        .update(forgotToken)
+        .digest("hex")
+
+        this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000
+        //step 2 - return values to user
+
+        return forgotToken
+
     }
+    
 }
 
 export default mongoose.model("User", userSchema)
