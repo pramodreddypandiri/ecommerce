@@ -3,7 +3,7 @@ import JWT from 'jsonwebtoken'
 import asyncHandler from '../services/asyncHandler';
 import CustomError from '../utils/customError';
 import config from '../config/index';
-
+//middle ware
 export const isLoggedIn = asyncHandler(async (req, res, next) => {
     let token;
     // get token from cookies or headers
