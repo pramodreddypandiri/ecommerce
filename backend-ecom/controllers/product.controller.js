@@ -5,7 +5,7 @@ import {s3FileDelete, s3FileUpload} from '../services/imageUpload';
 import asyncHandler from '../services/asyncHandler'
 import CustomError from '../utils/customError'
 import { Mongoose } from 'mongoose';
-import { Firehose } from 'aws-sdk';
+
 import s3 from '../config/s3.config';
 import config from '../config/index';
 
@@ -70,3 +70,43 @@ export const addProduct = asyncHandler (async(req, res) =>{
         }
     })
 })
+
+// get all products 
+export const getAllProducts =asyncHandler(async(req, res) => {
+    const products = await Product.find()
+    if(!products){
+        throw new CustomError("No product was found",404)
+
+    }
+    res.status(200).json({
+        success: true,
+        products
+    })
+
+})
+
+// get product by id
+export const getProductById = asyncHandler(async(req, res) => {
+    const {id: productId} = req.params
+    const product = await Product.findById(productId)
+    if(!product){
+        throw new CustomError("No product was found",404)
+
+    }
+    res.status(200).json({
+        success: true,
+        product
+    })
+
+})
+
+// delete product 
+
+// assignment to read : 
+/*
+model.aggregate([{}, {}, {}])
+$group
+$push
+$lookup
+$project
+*/
