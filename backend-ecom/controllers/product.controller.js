@@ -72,7 +72,7 @@ export const addProduct = asyncHandler (async(req, res) =>{
 })
 
 // get all products 
-export const getAllProducts =asyncHandler(async(req, res) => {
+export const getAllProducts = asyncHandler(async(req, res) => {
     const products = await Product.find()
     if(!products){
         throw new CustomError("No product was found",404)
@@ -101,7 +101,18 @@ export const getProductById = asyncHandler(async(req, res) => {
 })
 
 // delete product 
+export const deleteProduct = asyncHandler(async (req, res) => {
+    const {id: productId} = req.params
+    const deleted = await Product.findByIdAndDelete(productId)
+    if(!deleted){
+        throw new CustomError("Could not able to delete", 401)
+    } 
+    res.status(200).json({
+        success: true,
+        message: "Deleted product successfully"
+    })
 
+})
 // assignment to read : 
 /*
 model.aggregate([{}, {}, {}])

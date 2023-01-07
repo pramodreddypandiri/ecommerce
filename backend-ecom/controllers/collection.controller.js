@@ -46,7 +46,7 @@ export const updateCollection = asyncHandler(async (req, res) => {
         new: true,
         runValidators: true
     })
-    if(!updateCollection){
+    if(!updatedCollection){
         throw new CustomError("Collection not found", 400)
 
     }
