@@ -17,4 +17,17 @@ export const generateRazorpayOrderId = asyncHandler(async(req, res) => {
     //verify product price from backend
 
     // make a DB query to get all products and info
+
+    //total amount and final amount
+    // coupon check in DB
+    // final amount = totalAmount - discount
+    const options = {
+        amount: Math.round(totalAmount *100),
+        currency: "INR",
+        receipt: `receipt_${new Date().getTime()}`
+    }
+    const order =  await razorpay.orders.create(options)
+    //if order does not exist (failure), throw error
+    
+    // success => send to front end
 })
